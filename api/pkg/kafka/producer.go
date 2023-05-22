@@ -23,4 +23,5 @@ func InitProducer() {
 func Send(data []byte) {
 	encoder := sarama.ByteEncoder(data)
 	producer.Input() <- &sarama.ProducerMessage{Topic: topic, Key: nil, Value: encoder}
+
 }

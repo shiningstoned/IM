@@ -13,6 +13,7 @@ type Message struct {
 	FromId  *string `thrift:"fromId,1,optional" frugal:"1,optional,string" json:"fromId,omitempty"`
 	ToId    string  `thrift:"toId,2" frugal:"2,default,string" json:"toId"`
 	Content string  `thrift:"content,3" frugal:"3,default,string" json:"content"`
+	Type    int64   `thrift:"type,4" frugal:"4,default,i64" json:"type"`
 }
 
 func NewMessage() *Message {
@@ -39,6 +40,10 @@ func (p *Message) GetToId() (v string) {
 func (p *Message) GetContent() (v string) {
 	return p.Content
 }
+
+func (p *Message) GetType() (v int64) {
+	return p.Type
+}
 func (p *Message) SetFromId(val *string) {
 	p.FromId = val
 }
@@ -48,11 +53,15 @@ func (p *Message) SetToId(val string) {
 func (p *Message) SetContent(val string) {
 	p.Content = val
 }
+func (p *Message) SetType(val int64) {
+	p.Type = val
+}
 
 var fieldIDToName_Message = map[int16]string{
 	1: "fromId",
 	2: "toId",
 	3: "content",
+	4: "type",
 }
 
 func (p *Message) IsSetFromId() bool {
@@ -101,6 +110,16 @@ func (p *Message) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -165,6 +184,15 @@ func (p *Message) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *Message) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Type = v
+	}
+	return nil
+}
+
 func (p *Message) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("Message"); err != nil {
@@ -181,6 +209,10 @@ func (p *Message) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 
@@ -255,6 +287,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *Message) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("type", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Type); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
 func (p *Message) String() string {
 	if p == nil {
 		return "<nil>"
@@ -275,6 +324,9 @@ func (p *Message) DeepEqual(ano *Message) bool {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.Content) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Type) {
 		return false
 	}
 	return true
@@ -306,11 +358,19 @@ func (p *Message) Field3DeepEqual(src string) bool {
 	}
 	return true
 }
+func (p *Message) Field4DeepEqual(src int64) bool {
+
+	if p.Type != src {
+		return false
+	}
+	return true
+}
 
 type SaveMsgRequset struct {
 	FromId  string `thrift:"fromId,1" frugal:"1,default,string" json:"fromId"`
 	ToId    string `thrift:"toId,2" frugal:"2,default,string" json:"toId"`
 	Content string `thrift:"content,3" frugal:"3,default,string" json:"content"`
+	Type    int64  `thrift:"type,4" frugal:"4,default,i64" json:"type"`
 }
 
 func NewSaveMsgRequset() *SaveMsgRequset {
@@ -332,6 +392,10 @@ func (p *SaveMsgRequset) GetToId() (v string) {
 func (p *SaveMsgRequset) GetContent() (v string) {
 	return p.Content
 }
+
+func (p *SaveMsgRequset) GetType() (v int64) {
+	return p.Type
+}
 func (p *SaveMsgRequset) SetFromId(val string) {
 	p.FromId = val
 }
@@ -341,11 +405,15 @@ func (p *SaveMsgRequset) SetToId(val string) {
 func (p *SaveMsgRequset) SetContent(val string) {
 	p.Content = val
 }
+func (p *SaveMsgRequset) SetType(val int64) {
+	p.Type = val
+}
 
 var fieldIDToName_SaveMsgRequset = map[int16]string{
 	1: "fromId",
 	2: "toId",
 	3: "content",
+	4: "type",
 }
 
 func (p *SaveMsgRequset) Read(iprot thrift.TProtocol) (err error) {
@@ -390,6 +458,16 @@ func (p *SaveMsgRequset) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -454,6 +532,15 @@ func (p *SaveMsgRequset) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *SaveMsgRequset) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Type = v
+	}
+	return nil
+}
+
 func (p *SaveMsgRequset) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("SaveMsgRequset"); err != nil {
@@ -470,6 +557,10 @@ func (p *SaveMsgRequset) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 
@@ -542,6 +633,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *SaveMsgRequset) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("type", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Type); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
 func (p *SaveMsgRequset) String() string {
 	if p == nil {
 		return "<nil>"
@@ -564,6 +672,9 @@ func (p *SaveMsgRequset) DeepEqual(ano *SaveMsgRequset) bool {
 	if !p.Field3DeepEqual(ano.Content) {
 		return false
 	}
+	if !p.Field4DeepEqual(ano.Type) {
+		return false
+	}
 	return true
 }
 
@@ -584,6 +695,13 @@ func (p *SaveMsgRequset) Field2DeepEqual(src string) bool {
 func (p *SaveMsgRequset) Field3DeepEqual(src string) bool {
 
 	if strings.Compare(p.Content, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *SaveMsgRequset) Field4DeepEqual(src int64) bool {
+
+	if p.Type != src {
 		return false
 	}
 	return true

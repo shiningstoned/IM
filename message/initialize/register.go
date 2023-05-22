@@ -9,7 +9,7 @@ import (
 )
 
 func InitRegistry() (registry.Registry, registry.Info) {
-	r, err := consul.NewConsulRegister("172.21.172.211:8500",
+	r, err := consul.NewConsulRegister("172.24.111.215:8500",
 		consul.WithCheck(&api.AgentServiceCheck{
 			Interval:                       "5s",
 			Timeout:                        "5s",
@@ -22,7 +22,7 @@ func InitRegistry() (registry.Registry, registry.Info) {
 
 	info := registry.Info{
 		ServiceName: "message_srv",
-		Addr:        utils.NewNetAddr("tcp", "172.21.172.211:8882"),
+		Addr:        utils.NewNetAddr("tcp", "172.24.111.215:8882"),
 		Weight:      10,
 	}
 	return r, info

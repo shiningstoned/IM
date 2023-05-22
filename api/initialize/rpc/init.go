@@ -7,4 +7,5 @@ import (
 func Init() {
 	global.UserClient = InitUserService()
 	global.MessageClient = InitMessageService()
+	global.GroupClinet = InitGroupService()
 }

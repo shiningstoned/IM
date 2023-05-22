@@ -6,16 +6,17 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/websocket"
 	api "im-demo/api/biz/model/api"
 	"im-demo/api/global"
 	"im-demo/api/middleware"
 	"im-demo/api/ws"
+	"im-demo/kitex_gen/group"
 	"im-demo/kitex_gen/message"
 	"im-demo/kitex_gen/user"
 	"net/http"
-	"sync"
 )
 
 // Login .
@@ -138,20 +139,50 @@ func WsChat(ctx context.Context, c *app.RequestContext) {
 		hlog.Fatalf("upgrader websocket failed: %s", err.Error())
 	}
 
-	var locker sync.RWMutex
+}
 
-	go func() {
-		for {
-			locker.Lock()
-			client, ok := ws.MyServer.Clients[uuid.(string)]
-			locker.Unlock()
-			if !ok {
-				continue
-			}
+// CreateGroup .
+// @router /group/create [POST]
+func CreateGroup(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.CreateGroupRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	myUuid, _ := c.Get("uuid")
+	resp, err := global.GroupClinet.CreateGroup(ctx, &group.CreateGroupRequest{
+		OwnerUuid: myUuid.(string),
+	})
 
-			savemessage := <-client.Storage
-			global.MessageClient.SaveMessage(ctx, &savemessage)
-		}
-	}()
+	if err != nil {
+		c.JSON(consts.StatusOK, utils.H{"message": "create group failed"})
+	}
 
+	c.JSON(consts.StatusOK, resp)
+}
+
+// JoinGroup .
+// @router /group/join [POST]
+func JoinGroup(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.JoinGroupRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	uuid, _ := c.Get("uuid")
+	resp, err := global.GroupClinet.JoinGroup(ctx, &group.JoinGroupRequest{
+		GroupUuid: req.GroupUuid,
+		MyUuid:    uuid.(string),
+	})
+
+	if err != nil {
+		c.JSON(consts.StatusOK, utils.H{"message": err.Error()})
+	}
+
+	c.JSON(consts.StatusOK, resp)
 }

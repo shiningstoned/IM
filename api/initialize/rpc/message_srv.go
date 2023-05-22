@@ -9,7 +9,7 @@ import (
 )
 
 func InitMessageService() message.Client {
-	r, err := consul.NewConsulResolver("172.221.172.211:8500")
+	r, err := consul.NewConsulResolver("172.24.111.215:8500")
 	if err != nil {
 		hlog.Fatalf("new consul resolver failed: %s", err.Error())
 	}

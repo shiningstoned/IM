@@ -10,6 +10,7 @@ type Message struct {
 	FromId  string
 	ToId    string
 	Content string
+	Type    int
 }
 
 type MessageManager struct {

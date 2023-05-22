@@ -4,6 +4,13 @@ struct Request {
 
 }
 
+struct CreateGroupRequest {
+}
+
+struct JoinGroupRequest {
+    1: string groupUuid
+}
+
 struct LoginRequest {
     1: string username
     2: string password
@@ -38,6 +45,9 @@ service ApiService {
     CommonResponse DelFriend(1: DelFriendRequest req)(api.post="/user/delfriend")
 
     CommonResponse WsChat(1: Request req)(api.get="/wschat")
+
+    CommonResponse CreateGroup(1: CreateGroupRequest req)(api.post="/group/create")
+    CommonResponse JoinGroup(1: JoinGroupRequest req)(api.post="/group/join")
 }
 
 

@@ -4,19 +4,19 @@ go 1.20
 
 require (
 	github.com/Shopify/sarama v1.38.1
-	github.com/apache/thrift v0.13.0
-	github.com/cloudwego/hertz v0.6.2
+	github.com/apache/thrift v0.18.1
+	github.com/cloudwego/hertz v0.6.3
 	github.com/cloudwego/kitex v0.5.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/consul/api v1.20.0
-	github.com/hertz-contrib/registry/consul v0.0.0-20230310022437-e0024eacdbb7
+	github.com/hertz-contrib/registry/consul v0.0.0-20230423034249-f6ea4f8d59be
 	github.com/hertz-contrib/websocket v0.0.1
 	github.com/kitex-contrib/registry-consul v0.0.0-20230406075225-7d341f036654
-	github.com/redis/go-redis/v9 v9.0.3
+	github.com/redis/go-redis/v9 v9.0.4
 	github.com/spf13/viper v1.15.0
 	gorm.io/driver/mysql v1.5.0
-	gorm.io/gorm v1.25.0
+	gorm.io/gorm v1.25.1
 )
 
 require (

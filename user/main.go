@@ -20,7 +20,7 @@ func main() {
 		pkg.NewUserManager(db),
 		pkg.NewRUserManager(client),
 	},
-		server.WithServiceAddr(utils.NewNetAddr("tcp", "172.21.172.211:8880")),
+		server.WithServiceAddr(utils.NewNetAddr("tcp", "172.24.111.215:8880")),
 		server.WithRegistry(r),
 		server.WithRegistryInfo(&info),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: "user_srv"}),
@@ -29,6 +29,6 @@ func main() {
 	err := svr.Run()
 
 	if err != nil {
-		log.Println(err.Error())
+		log.Fatal(err.Error())
 	}
 }

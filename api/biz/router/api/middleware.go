@@ -9,7 +9,7 @@ import (
 
 func rootMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{middleware.Cors()}
 }
 
 func _userMw() []app.HandlerFunc {
@@ -27,11 +27,6 @@ func _registerMw() []app.HandlerFunc {
 	return nil
 }
 
-func __ddfriendMw() []app.HandlerFunc {
-	// your code...
-	return []app.HandlerFunc{middleware.JWTAuth()}
-}
-
 func _delfriendMw() []app.HandlerFunc {
 	// your code...
 	return []app.HandlerFunc{middleware.JWTAuth()}
@@ -39,6 +34,26 @@ func _delfriendMw() []app.HandlerFunc {
 
 func _wschatMw() []app.HandlerFunc {
 	// your code...
-	//return []app.HandlerFunc{middleware.JWTAuth()}
+	return []app.HandlerFunc{middleware.JWTAuth()}
+	//return nil
+}
+
+func _groupMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _creategroupMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{middleware.JWTAuth()}
+}
+
+func _joingroupMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{middleware.JWTAuth()}
+}
+
+func _addfriendMw() []app.HandlerFunc {
+	// your code...
 	return []app.HandlerFunc{middleware.JWTAuth()}
 }

@@ -1,7 +1,13 @@
 package ws
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"im-demo/api/global"
+	"im-demo/api/pkg/constant"
+	"im-demo/kitex_gen/group"
 	"im-demo/kitex_gen/message"
 	"log"
 )
@@ -39,6 +45,7 @@ func (s *Server) Start() {
 				FromId:  &from,
 				ToId:    conn.Uuid,
 				Content: content,
+				Type:    constant.TYPE_SYSTEM,
 			}
 			message, _ := json.Marshal(msg)
 			conn.Send <- message
@@ -51,15 +58,47 @@ func (s *Server) Start() {
 		case messages := <-s.Broadcast:
 			msg := message.Message{}
 			json.Unmarshal(messages, &msg)
-			var m = message.SaveMsgRequset{
-				FromId:  *msg.FromId,
-				ToId:    msg.ToId,
-				Content: msg.Content,
-			}
-			s.Clients[*msg.FromId].Storage <- m
-			conn, ok := s.Clients[msg.ToId]
-			if ok {
-				conn.Send <- messages
+			if msg.Type == constant.TYPE_USER {
+				_, err := global.MessageClient.SaveMessage(context.Background(), &message.SaveMsgRequset{
+					FromId:  *msg.FromId,
+					ToId:    msg.ToId,
+					Content: msg.Content,
+					Type:    constant.TYPE_USER,
+				})
+				if err != nil {
+					hlog.Errorf("save message failed: %s", err.Error())
+				}
+				conn, ok := s.Clients[msg.ToId]
+				if ok {
+					conn.Send <- messages
+				}
+			} else if msg.Type == constant.TYPE_GROUP {
+				groupMem, err := global.GroupClinet.GetGroupMem(context.Background(), &group.GetGroupMemRequest{GroupUuid: msg.ToId})
+				if err != nil {
+					hlog.Fatalf("get group members failed: %s", err.Error())
+				}
+				fmt.Println(msg.ToId, groupMem)
+				for _, mem := range groupMem.GroupMemUuid {
+					if mem == *msg.FromId {
+						global.MessageClient.SaveMessage(context.Background(), &message.SaveMsgRequset{
+							FromId:  msg.ToId,
+							ToId:    *msg.FromId,
+							Content: msg.Content,
+							Type:    constant.TYPE_GROUP,
+						})
+						continue
+					}
+					global.MessageClient.SaveMessage(context.Background(), &message.SaveMsgRequset{
+						FromId:  msg.ToId,
+						ToId:    mem,
+						Content: msg.Content,
+						Type:    constant.TYPE_GROUP,
+					})
+					conn, ok := s.Clients[mem]
+					if ok {
+						conn.Send <- messages
+					}
+				}
 			}
 		}
 	}

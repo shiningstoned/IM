@@ -10,7 +10,7 @@ import (
 )
 
 func InitUserService() user.Client {
-	resolver, err := consul.NewConsulResolver("172.21.172.211:8500")
+	resolver, err := consul.NewConsulResolver("172.24.111.215:8500")
 	if err != nil {
 		hlog.Fatalf("new consul resolver failed: %s", err.Error())
 	}

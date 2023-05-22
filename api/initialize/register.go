@@ -10,7 +10,7 @@ import (
 
 func InitRegistry() (registry.Registry, registry.Info) {
 	cfg := api.DefaultConfig()
-	cfg.Address = "172.21.172.211:8500"
+	cfg.Address = "172.24.111.215:8500"
 	client, err := api.NewClient(cfg)
 	if err != nil {
 		hlog.Fatalf("new consul client failed: %s", err.Error())
@@ -25,7 +25,7 @@ func InitRegistry() (registry.Registry, registry.Info) {
 	info := registry.Info{
 		Weight:      10,
 		ServiceName: "api",
-		Addr:        utils.NewNetAddr("tcp", "172.21.172.211:8881"),
+		Addr:        utils.NewNetAddr("tcp", "172.24.111.215:8080"),
 	}
 	return r, info
 }

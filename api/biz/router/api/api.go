@@ -19,8 +19,13 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	root.GET("/wschat", append(_wschatMw(), api.WsChat)...)
 	{
+		_group := root.Group("/group", _groupMw()...)
+		_group.POST("/create", append(_creategroupMw(), api.CreateGroup)...)
+		_group.POST("/join", append(_joingroupMw(), api.JoinGroup)...)
+	}
+	{
 		_user := root.Group("/user", _userMw()...)
-		_user.POST("/addfriend", append(__ddfriendMw(), api.AddFriend)...)
+		_user.POST("/addfriend", append(_addfriendMw(), api.AddFriend)...)
 		_user.POST("/delfriend", append(_delfriendMw(), api.DelFriend)...)
 		_user.POST("/login", append(_loginMw(), api.Login)...)
 		_user.POST("/register", append(_registerMw(), api.Register)...)
